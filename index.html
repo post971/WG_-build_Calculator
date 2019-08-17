@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	<title>生煎计算器</title>
+	<script type="text/javascript" src="js/Jquery3.2.1.js"></script>
+	<style type="text/css">
+		button{
+			border:0px;
+		}
+		center{
+			display: none;
+		}
+		#td_y,#td_d,#td_g,#td_l{
+			width: 15%;
+		}
+		#td_lt,#td_kj{
+			width: 20%;
+		}
+		td{
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div style="width:device-width; ">
+		<div style="font-weight: bolder;">现有资源：</div>
+		油：<input type="number" id="you"><br>
+		弹：<input type="number" id="dan"><br>
+		钢：<input type="number" id="gan"><br>
+		铝：<input type="number" id="lv"><br>
+		<div style="width: 50%;float: left;">
+			蓝图：<input type="number" id="lt" style="width: 40%;"><br>
+		</div>
+		<div style="width: 50%;float: left;">
+			快建：<input type="number" id="kj" style="width: 40%;"><br>
+		</div>
+		<div style="font-weight: bolder;">使用公式：</div>
+		油：<input type="number" id="you1"><br>
+		弹：<input type="number" id="dan1"><br>
+		钢：<input type="number" id="gan1"><br>
+		铝：<input type="number" id="lv1"><br>
+		<input type="Button" value="计算" style="width: 100%;height: 10%;background: #009688;color: #fff;font-size: 24px;" onclick="jisuan()">
+		<br>
+		<br>
+		<div id="data1">
+			<table border="1px" cellspacing="0" cellpadding="0" style="width: 100%">
+				<tr>
+					<td colspan="6" id="xx">能建造x次</td>
+				</tr>
+				<tr>
+					<td colspan="6">资源剩余</td>
+				</tr>
+				<tr>
+					<td>油</td>
+					<td>弹</td>
+					<td>钢</td>
+					<td>铝</td>
+					<td>建造蓝图</td>
+					<td>快速建造</td>
+				</tr>
+				<tr>
+					<td id="td_y">0</td>
+					<td id="td_d">0</td>
+					<td id="td_g">0</td>
+					<td id="td_l">0</td>
+					<td id="td_lt">0</td>
+					<td id="td_kj">0</td>
+				</tr>
+				<tr style="font-size: 11px;">
+					<td colspan="6">标红的资源为低于公式的资源。可优先提升补充该资源<br>若蓝图或者快建为零，也是需要补充蓝图或快建<br>
+						<s>至于先补充哪个标红资源还是补充道具自己想去吧</s><br>
+						<a href="https://bbs.nga.cn/read.php?tid=15603565">建造公式速查</a> <a href="http://js.ntwikis.com/jsp/apps/cancollezh/charactors/buildtime_m.jsp">建造时间</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function jisuan(){
+		//资源和公式
+		var you=$("#you").val();
+		var you1=$("#you1").val();
+		var dan=$("#dan").val();
+		var dan1=$("#dan1").val();
+		var gan=$("#gan").val();
+		var gan1=$("#gan1").val();
+		var lv=$("#lv").val();
+		var lv1=$("#lv1").val();
+		//快建图纸
+		var lt=$("#lt").val();
+		var kj=$("#kj").val();
+		//最大公式消耗次数
+		var y=(you-you%you1)/you1;
+		var d=(dan-dan%dan1)/dan1;
+		var g=(gan-gan%gan1)/gan1;
+		var l=(lv-lv%lv1)/lv1;
+
+
+		var min=0;
+		if(y>d){
+			min=d;
+		}
+		else{
+			min=y;
+		}
+
+		if(g<min){
+			min=g;
+		}
+
+		if(l<min){
+			min=l;
+		}
+		//资源只够建造min次
+		
+
+		//蓝图是否能建造ming次
+		if(lt<min){
+			min=lt;
+		}
+
+
+		
+		//资源剩余
+		var yy=you-(you1*min);
+		var dd=dan-(dan1*min);
+		var gg=gan-(gan1*min);
+		var ll=lv-(lv1*min);
+		var lt1=lt-min;
+
+		//某项资源缺少标红和恢复标黑
+		if(yy<you1){
+			$("#td_y").css("color","#f00");
+		}
+		else{
+			$("#td_y").css("color","#000");
+		}
+		if(dd<dan1){
+			$("#td_d").css("color","#f00");
+		}
+		else{
+			$("#td_d").css("color","#000");
+		}
+		if(gg<gan1){
+			$("#td_g").css("color","#f00");
+		}
+		else{
+			$("#td_g").css("color","#000");
+		}
+		if(ll<lv1){
+			$("#td_l").css("color","#f00");
+		}
+		else{
+			$("#td_l").css("color","#000");
+		}
+
+
+		//显示剩余资源数据
+		$("#td_y").text(yy);
+		$("#td_d").text(dd);
+		$("#td_g").text(gg);
+		$("#td_l").text(ll);
+		$("#td_lt").text(lt1);
+		
+
+		
+
+		//显示快建资源和提示信息
+
+		if(kj>min){
+			
+			$("#td_kj").text(kj-min);
+			$("#xx").text("可以建造"+min+"次"+","+"可快建"+min+"次");
+		}
+		else{
+			
+			$("#td_kj").text(0);
+			$("#xx").text("可以建造"+min+"次"+","+"可快建"+kj+"次");
+		}
+
+	}
+</script>
+</body>
+</html>
